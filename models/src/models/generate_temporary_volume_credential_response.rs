@@ -1,5 +1,5 @@
 use crate::models;
-use chrono::{DateTime, Utc, serde::ts_milliseconds};
+use chrono::{serde::ts_milliseconds, DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]

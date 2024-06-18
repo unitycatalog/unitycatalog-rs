@@ -1,6 +1,6 @@
 use crate::models;
+use chrono::{serde::ts_milliseconds, DateTime, Utc};
 use serde::{Deserialize, Serialize};
-use chrono::{DateTime, Utc, serde::ts_milliseconds};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct GenerateTemporaryTableCredentialResponse {

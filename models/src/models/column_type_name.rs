@@ -4,7 +4,20 @@ use strum::{Display, IntoStaticStr};
 
 /// ColumnTypeName : Name of type (INT, STRUCT, MAP, etc.).
 /// Name of type (INT, STRUCT, MAP, etc.).
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize, Display, IntoStaticStr)]
+#[derive(
+    Clone,
+    Copy,
+    Debug,
+    Eq,
+    PartialEq,
+    Ord,
+    PartialOrd,
+    Hash,
+    Serialize,
+    Deserialize,
+    Display,
+    IntoStaticStr,
+)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 #[strum(serialize_all = "SCREAMING_SNAKE_CASE")]
 pub enum ColumnTypeName {

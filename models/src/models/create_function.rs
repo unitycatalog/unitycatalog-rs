@@ -20,9 +20,7 @@ pub struct CreateFunction {
     pub routine_body: RoutineBody,
     /// Function body.
     pub routine_definition: String,
-    #[serde(
-        skip_serializing_if = "Option::is_none"
-    )]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub routine_dependencies: Option<models::DependencyList>,
     /// Function parameter style. **S** is the value for SQL.
     pub parameter_style: ParameterStyle,
@@ -48,7 +46,20 @@ pub struct CreateFunction {
 }
 
 /// Function language. When **EXTERNAL** is used, the language of the routine function should be specified in the __external_language__ field,  and the __return_params__ of the function cannot be used (as **TABLE** return type is not supported), and the __sql_data_access__ field must be **NO_SQL**.
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize, Display, IntoStaticStr)]
+#[derive(
+    Clone,
+    Copy,
+    Debug,
+    Eq,
+    PartialEq,
+    Ord,
+    PartialOrd,
+    Hash,
+    Serialize,
+    Deserialize,
+    Display,
+    IntoStaticStr,
+)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 #[strum(serialize_all = "SCREAMING_SNAKE_CASE")]
 pub enum RoutineBody {
@@ -57,7 +68,20 @@ pub enum RoutineBody {
 }
 
 /// Function parameter style. **S** is the value for SQL.
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize, Display, IntoStaticStr)]
+#[derive(
+    Clone,
+    Copy,
+    Debug,
+    Eq,
+    PartialEq,
+    Ord,
+    PartialOrd,
+    Hash,
+    Serialize,
+    Deserialize,
+    Display,
+    IntoStaticStr,
+)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 #[strum(serialize_all = "SCREAMING_SNAKE_CASE")]
 pub enum ParameterStyle {
@@ -70,7 +94,20 @@ impl Default for ParameterStyle {
     }
 }
 /// Function SQL data access.
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize, Display, IntoStaticStr)]
+#[derive(
+    Clone,
+    Copy,
+    Debug,
+    Eq,
+    PartialEq,
+    Ord,
+    PartialOrd,
+    Hash,
+    Serialize,
+    Deserialize,
+    Display,
+    IntoStaticStr,
+)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum SqlDataAccess {
     ContainsSql,
@@ -79,7 +116,20 @@ pub enum SqlDataAccess {
 }
 
 /// Function security type.
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize, Display, IntoStaticStr)]
+#[derive(
+    Clone,
+    Copy,
+    Debug,
+    Eq,
+    PartialEq,
+    Ord,
+    PartialOrd,
+    Hash,
+    Serialize,
+    Deserialize,
+    Display,
+    IntoStaticStr,
+)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum SecurityType {
     Definer,
