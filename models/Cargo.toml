@@ -1,0 +1,17 @@
+[package]
+name = "unitycatalog-models"
+version = "0.1.0"
+description = "Generated structs for Unity Catalog models"
+
+edition.workspace = true
+license.workspace = true
+
+publish = false
+
+[dependencies]
+strum = { version = "0.26", features = ["derive"] }
+
+serde = { workspace = true }
+serde_json = { workspace = true }
+uuid = { workspace = true }
+chrono = { workspace = true }
