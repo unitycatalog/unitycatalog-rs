@@ -1,18 +1,18 @@
 # unitycatalog-rs
 
-[![Crates.io](https://img.shields.io/crates/v/unitycatalog-rs.svg)](https://crates.io/crates/unitycatalog-rs)
-[![Docs.rs](https://docs.rs/unitycatalog-rs/badge.svg)](https://docs.rs/unitycatalog-rs)
-[![CI](https://github.com/abrassel/unitycatalog-rs/workflows/CI/badge.svg)](https://github.com/abrassel/unitycatalog-rs/actions)
-[![Rust GitHub Template](https://img.shields.io/badge/Rust%20GitHub-Template-blue)](https://rust-github.github.io/)
+[![CI](https://github.com/unitycatalog/unitycatalog-rs/workflows/CI/badge.svg)](https://github.com/unitycatalog/unitycatalog-rs/actions)
 
+unitycatalog-rs serves an alternate implementation of the [Unity Catalog protocol](https://github.com/unitycatalog/unitycatalog/tree/main/api). The Unity Catalog protocol is a specification for a multi-modal catalog for data and AI assets.
 
-## Installation
+## Why Rust?
 
-### Cargo
+Rust was chosen as a language for the second implementation for a few reasons:
 
-* Install the rust toolchain in order to have cargo installed by following
-  [this](https://www.rust-lang.org/tools/install) guide.
-* run `cargo install unitycatalog-rs`
+- **Performance**: Rust compiles to native bytecode, enabling it to be used in performance-critical and constrained environments.
+- **FFI**: As Rust uses the C ABI, bindings can be exposed to any language, like C, Go, Python, etc.
+- **Ecosystem**: Rust has a rich ecosystem of libraries, especially related to big data processing ([delta-rs](https://github.com/delta-io/delta-rs), [datafusion](https://github.com/apache/datafusion), etc).
+- **Safety**: Rust's strong type system and ownership model make it difficult to write code that is unsafe or has undefined behavior. When dealing with data assets, especially when it comes to access control, this helps us ensure that we are not introducing security vulnerabilities.
+- **We want to write it!**: Most importantly, we like writing Rust!
 
 ## License
 
