@@ -1,30 +1,27 @@
 use crate::models;
 use serde::{Deserialize, Serialize};
+use strum::{Display, IntoStaticStr};
 
 #[allow(clippy::empty_docs)]
 ///
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
+#[derive(
+    Clone,
+    Copy,
+    Debug,
+    Eq,
+    PartialEq,
+    Ord,
+    PartialOrd,
+    Hash,
+    Serialize,
+    Deserialize,
+    IntoStaticStr,
+    Display,
+)]
+#[strum(serialize_all = "SCREAMING_SNAKE_CASE")]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum TableOperation {
-    #[serde(rename = "UNKNOWN_TABLE_OPERATION")]
     UnknownTableOperation,
-    #[serde(rename = "READ")]
     Read,
-    #[serde(rename = "READ_WRITE")]
     ReadWrite,
-}
-
-impl std::fmt::Display for TableOperation {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        match self {
-            Self::UnknownTableOperation => write!(f, "UNKNOWN_TABLE_OPERATION"),
-            Self::Read => write!(f, "READ"),
-            Self::ReadWrite => write!(f, "READ_WRITE"),
-        }
-    }
-}
-
-impl Default for TableOperation {
-    fn default() -> TableOperation {
-        Self::UnknownTableOperation
-    }
 }

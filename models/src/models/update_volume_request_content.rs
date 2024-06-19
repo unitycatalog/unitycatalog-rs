@@ -10,12 +10,3 @@ pub struct UpdateVolumeRequestContent {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub new_name: Option<String>,
 }
-
-impl UpdateVolumeRequestContent {
-    pub fn new() -> UpdateVolumeRequestContent {
-        UpdateVolumeRequestContent {
-            comment: None,
-            new_name: None,
-        }
-    }
-}

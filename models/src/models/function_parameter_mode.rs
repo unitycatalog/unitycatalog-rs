@@ -1,24 +1,25 @@
 use crate::models;
 use serde::{Deserialize, Serialize};
+use strum::{Display, IntoStaticStr};
 
 /// FunctionParameterMode : The mode of the function parameter.
 /// The mode of the function parameter.
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
+#[derive(
+    Clone,
+    Copy,
+    Debug,
+    Eq,
+    PartialEq,
+    Ord,
+    PartialOrd,
+    Hash,
+    Serialize,
+    Deserialize,
+    IntoStaticStr,
+    Display,
+)]
+#[strum(serialize_all = "SCREAMING_SNAKE_CASE")]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum FunctionParameterMode {
-    #[serde(rename = "IN")]
     In,
-}
-
-impl std::fmt::Display for FunctionParameterMode {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        match self {
-            Self::In => write!(f, "IN"),
-        }
-    }
-}
-
-impl Default for FunctionParameterMode {
-    fn default() -> FunctionParameterMode {
-        Self::In
-    }
 }

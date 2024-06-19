@@ -30,6 +30,6 @@ pub struct ColumnInfo {
     /// Whether field may be Null.
     pub nullable: bool,
     /// Partition index for column.
-    #[serde(rename = "partition_index", skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub partition_index: Option<i32>,
 }
