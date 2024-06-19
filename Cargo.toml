@@ -4,6 +4,7 @@ members = [
     "models",
 ]
 resolver = "2"
+default-members = ["server"]
 
 [workspace.package]
 edition = "2021"
