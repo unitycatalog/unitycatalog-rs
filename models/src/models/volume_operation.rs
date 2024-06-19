@@ -1,6 +1,7 @@
 use crate::models;
 use serde::{Deserialize, Serialize};
 
+#[allow(clippy::empty_docs)]
 ///
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum VolumeOperation {
