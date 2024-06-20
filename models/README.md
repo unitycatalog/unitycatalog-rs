@@ -1,4 +1,6 @@
-# Rust=generated structs for Unity Catalog
+# Rust-generated structs for Unity Catalog
+
+![crates.io](https://img.shields.io/crates/v/unitycatalog-sys.svg)
 
 ## Overview
 
