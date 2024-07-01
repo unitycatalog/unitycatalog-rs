@@ -1,8 +1,33 @@
 [package]
 name = "unitycatalog-server"
+description = "Unity catalog server, implemented in rust"
+
 edition.workspace = true
+authors.workspace = true
 license.workspace = true
 version.workspace = true
-publish = false
+publish.workspace = true
 
 [dependencies]
+anyhow = "^1.0.86"
+axum = "^0.7.5"
+object_store = { version = "^0.10.1", features = ["serde"] }
+thiserror = "1.0.61"
+toml_edit = { version = "0.22.14", features = ["serde"] }
+
+unitycatalog-models = { path = "../models" }
+
+chrono = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+tokio = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+reqwest = { workspace = true }
+utoipa = { workspace = true, features = ["axum_extras"] }
+uuid = { workspace = true }
+
+[features]
+aws = ["object_store/aws"]
+azure = ["object_store/azure"]
+gcp = ["object_store/gcp"]
