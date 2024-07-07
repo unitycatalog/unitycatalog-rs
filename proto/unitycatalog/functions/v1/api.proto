@@ -3,7 +3,8 @@ syntax = "proto3";
 package unitycatalog.functions.v1;
 
 import "buf/validate/validate.proto";
-import "unitycatalog/v1/models.proto";
+import "unitycatalog/functions/v1/models.proto";
+import "unitycatalog/tables/v1/models.proto";
 
 // TODO(roeap): This type essentially just replicates the `FunctionInfo`, with a few
 // fields missing. Since its quite complex and still considered experimantal, maybe
@@ -18,14 +19,14 @@ message CreateFunction {
   // Name of parent schema relative to its parent catalog.
   string schema_name = 3 [(buf.validate.field).string.min_len = 1];
 
-  unitycatalog.v1.FunctionParameterInfos input_params = 4;
+  FunctionParameterInfos input_params = 4;
 
-  unitycatalog.v1.ColumnTypeName data_type = 5;
+  unitycatalog.tables.v1.ColumnTypeName data_type = 5;
 
   // Pretty printed function data type.
   string full_data_type = 6 [(buf.validate.field).string.min_len = 1];
 
-  unitycatalog.v1.FunctionParameterInfos return_params = 7;
+  FunctionParameterInfos return_params = 7;
 
   // Function language. When EXTERNAL is used, the language of the routine function
   // should be specified in the external_language field, and the return_params
@@ -37,7 +38,7 @@ message CreateFunction {
   // Function body
   string routine_definition = 9;
 
-  unitycatalog.v1.DependencyList routine_dependencies = 10;
+  DependencyList routine_dependencies = 10;
 
   // Function parameter style. S is the value for SQL.
   // TODO(roeap): should this be an enum? If so, what are the valid values?
@@ -78,7 +79,7 @@ message CreateFunctionRequest {
 
 message CreateFunctionResponse {
   // The created function.
-  unitycatalog.v1.FunctionInfo function = 1;
+  FunctionInfo function = 1;
 }
 
 // Deletes the function that matches the supplied name.
@@ -97,7 +98,7 @@ message GetFunctionRequest {
 
 message GetFunctionResponse {
   // The function.
-  unitycatalog.v1.FunctionInfo function = 1;
+  FunctionInfo function = 1;
 }
 
 // List functions within the specified parent catalog and schema.
@@ -119,7 +120,7 @@ message ListFunctionsRequest {
 
 message ListFunctionsResponse {
   // The functions.
-  repeated unitycatalog.v1.FunctionInfo functions = 1;
+  repeated FunctionInfo functions = 1;
 
   // A token that can be sent as page_token to retrieve the next page.
   // If this field is omitted, there are no more results.

@@ -3,7 +3,7 @@ syntax = "proto3";
 package unitycatalog.schemas.v1;
 
 import "buf/validate/validate.proto";
-import "unitycatalog/v1/models.proto";
+import "unitycatalog/schemas/v1/models.proto";
 
 // Creates a new schema in the specified catalog.
 message CreateSchemaRequest {
@@ -22,7 +22,7 @@ message CreateSchemaRequest {
 // Response message for the CreateSchema method.
 message CreateSchemaResponse {
   // The created schema.
-  unitycatalog.v1.SchemaInfo schema = 1;
+  SchemaInfo schema = 1;
 }
 
 // Deletes the specified schema from the parent catalog.
@@ -43,7 +43,7 @@ message GetSchemaRequest {
 // Response message for the GetSchema method.
 message GetSchemaResponse {
   // The schema.
-  unitycatalog.v1.SchemaInfo schema = 1;
+  SchemaInfo schema = 1;
 }
 
 // Gets an array of schemas for a catalog.
@@ -63,7 +63,7 @@ message ListSchemasRequest {
 // Response message for the ListSchemas method.
 message ListSchemasResponse {
   // The list of schemas.
-  repeated unitycatalog.v1.SchemaInfo schemas = 1;
+  repeated SchemaInfo schemas = 1;
 
   // A token to retrieve the next page of results.
   // To read the next page, pass this value as the page_token in the ListSchemasRequest
@@ -88,7 +88,7 @@ message UpdateSchemaRequest {
 // Response message for the UpdateSchema method.
 message UpdateSchemaResponse {
   // The updated schema.
-  unitycatalog.v1.SchemaInfo schema = 1;
+  SchemaInfo schema = 1;
 }
 
 service SchemaService {

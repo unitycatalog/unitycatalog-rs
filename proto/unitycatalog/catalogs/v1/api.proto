@@ -3,7 +3,7 @@ syntax = "proto3";
 package unitycatalog.catalogs.v1;
 
 import "buf/validate/validate.proto";
-import "unitycatalog/v1/models.proto";
+import "unitycatalog/catalogs/v1/models.proto";
 
 // Creates a new catalog instance.
 message CreateCatalogRequest {
@@ -19,7 +19,7 @@ message CreateCatalogRequest {
 
 message CreateCatalogResponse {
   // The newly created catalog.
-  unitycatalog.v1.CatalogInfo catalog = 1;
+  CatalogInfo catalog = 1;
 }
 
 // Deletes the catalog that matches the supplied name.
@@ -41,7 +41,7 @@ message GetCatalogRequest {
 
 message GetCatalogResponse {
   // The catalog.
-  unitycatalog.v1.CatalogInfo catalog = 1;
+  CatalogInfo catalog = 1;
 }
 
 // Lists all catalogs.
@@ -63,7 +63,7 @@ message ListCatalogsRequest {
 
 message ListCatalogsResponse {
   // The list of catalogs.
-  repeated unitycatalog.v1.CatalogInfo catalogs = 1;
+  repeated CatalogInfo catalogs = 1;
 
   // A token to retrieve the next page of results. Pass this value in ListCatalogsRequest.page_token.
   optional string next_page_token = 2;
@@ -84,7 +84,7 @@ message UpdateCatalogRequest {
 
 message UpdateCatalogResponse {
   // The updated catalog.
-  unitycatalog.v1.CatalogInfo catalog = 1;
+  CatalogInfo catalog = 1;
 }
 
 service CatalogsService {

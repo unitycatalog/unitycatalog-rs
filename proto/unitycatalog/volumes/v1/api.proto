@@ -1,0 +1,93 @@
+syntax = "proto3";
+
+package unitycatalog.volumes.v1;
+
+import "buf/validate/validate.proto";
+import "unitycatalog/volumes/v1/models.proto";
+
+// Creates a new volume.
+message CreateVolumeRequest {
+  // Name of the table, relative to its parent schema.
+  string name = 1 [(buf.validate.field).string.min_len = 1];
+
+  // Name of parent catalog.
+  string catalog_name = 2 [(buf.validate.field).string.min_len = 1];
+
+  // Name of parent schema relative to its parent catalog.
+  string schema_name = 3 [(buf.validate.field).string.min_len = 1];
+
+  // Table type.
+  VolumeType volume_type = 4;
+
+  // Storage root URL for table (for MANAGED, EXTERNAL tables)
+  string storage_location = 5;
+
+  // User-provided free-form text description.
+  optional string comment = 6;
+
+  // JSON-serialized key-value pair map, encoded (escaped) as a string.
+  // map<string, string> properties = 9;
+}
+
+// Response for CreateVolumeRequest.
+message CreateVolumeResponse {
+  // The created volume.
+  VolumeInfo volume = 1;
+}
+
+// Deletes a volume from the specified parent catalog and schema.
+message DeleteVolumeRequest {
+  // Name of the volume to delete.
+  string full_name = 1 [(buf.validate.field).string.min_len = 1];
+}
+
+// Response for DeleteVolumeRequest.
+message DeleteVolumeResponse {}
+
+// Gets a volume for a specific catalog and schema.
+message GetVolumeRequest {
+  // Name of the volume to get.
+  string full_name = 1 [(buf.validate.field).string.min_len = 1];
+}
+
+// Response for GetVolumeRequest.
+message GetVolumeResponse {
+  // The volume.
+  VolumeInfo volume = 1;
+}
+
+// Gets an array of available volumes under the parent catalog and schema.
+// There is no guarantee of a specific ordering of the elements in the array.
+message ListVolumesRequest {
+  // Name of parent catalog.
+  string catalog_name = 1 [(buf.validate.field).string.min_len = 1];
+
+  // Name of parent schema relative to its parent catalog.
+  string schema_name = 2 [(buf.validate.field).string.min_len = 1];
+
+  optional int32 max_results = 3 [(buf.validate.field).int32.gte = 0];
+
+  // Specifies a page token to use. Set pageToken to the nextPageToken returned
+  // by a previous list request to get the next page of results.
+  // next_page_token will not be returned in a response if there are no more results available.
+  optional string page_token = 4;
+}
+
+// Updates the specified volume under the specified parent catalog and schema.
+// Currently only the name or the comment of the volume could be updated.
+message UpdateVolumeRequest {
+  // Name of the volume to update.
+  string full_name = 1 [(buf.validate.field).string.min_len = 1];
+
+  // New name of the volume.
+  string new_name = 2 [(buf.validate.field).string.min_len = 1];
+
+  // New comment of the volume.
+  optional string comment = 3;
+}
+
+// Response for UpdateVolumeRequest.
+message UpdateVolumeResponse {
+  // The updated volume.
+  VolumeInfo volume = 1;
+}

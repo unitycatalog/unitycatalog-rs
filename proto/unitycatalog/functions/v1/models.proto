@@ -1,33 +1,16 @@
 syntax = "proto3";
 
-package unitycatalog.v1;
+package unitycatalog.functions.v1;
 
 import "buf/validate/validate.proto";
+import "unitycatalog/tables/v1/models.proto";
 
-// Creates a new catalog instance.
-message CatalogInfo {
-  // unique identifier for the catalog.
-  string id = 1 [(buf.validate.field).string.min_len = 1];
-
-  // The name of the catalog.
-  string name = 2 [(buf.validate.field).string.min_len = 1];
-
-  // User-provided free-form text description.
-  optional string comment = 3;
-
-  // A map of key-value properties attached to the securable.
-  map<string, string> properties = 4;
-
-  // Time at which this catalog was created, in epoch milliseconds.
-  int64 created_at = 5;
-
-  // Time at which this catalog was last updated, in epoch milliseconds.
-  int64 updated_at = 6;
+enum FunctionParameterMode {
+  FUNCTION_PARAMETER_MODE_UNSPECIFIED = 0;
 }
 
-// TODO(roeap): in the jvm repo this type seems to have no fields, seems wrong?
-enum ColumnTypeName {
-  COLUMN_TYPE_UNSPECIFIED = 0;
+enum FunctionParameterType {
+  FUNCTION_PARAMETER_TYPE_UNSPECIFIED = 0;
 }
 
 message TableDependency {
@@ -51,14 +34,6 @@ message DependencyList {
   repeated Dependency dependencies = 1;
 }
 
-enum FunctionParameterMode {
-  FUNCTION_PARAMETER_MODE_UNSPECIFIED = 0;
-}
-
-enum FunctionParameterType {
-  FUNCTION_PARAMETER_TYPE_UNSPECIFIED = 0;
-}
-
 message FunctionParameterInfo {
   // The name of the parameter.
   string name = 1 [(buf.validate.field).string.min_len = 1];
@@ -69,7 +44,7 @@ message FunctionParameterInfo {
   // Full data type spec, JSON-serialized.
   string type_json = 3 [(buf.validate.field).string.min_len = 1];
 
-  ColumnTypeName type_name = 4;
+  unitycatalog.tables.v1.ColumnTypeName type_name = 4;
 
   // Digits of precision; required on Create for DecimalTypes.
   int32 type_precision = 5;
@@ -100,7 +75,7 @@ message FunctionInfo {
 
   FunctionParameterInfos input_params = 4;
 
-  ColumnTypeName data_type = 5;
+  unitycatalog.tables.v1.ColumnTypeName data_type = 5;
 
   // Pretty printed function data type.
   string full_data_type = 6 [(buf.validate.field).string.min_len = 1];
@@ -157,30 +132,4 @@ message FunctionInfo {
 
   // Id of Function, relative to parent schema.
   string function_id = 22 [(buf.validate.field).string.min_len = 1];
-}
-
-message SchemaInfo {
-  // Name of the schema, relative to its parent catalog.
-  string name = 1 [(buf.validate.field).string.min_len = 1];
-
-  // Name of parent catalog.
-  string catalog_name = 2 [(buf.validate.field).string.min_len = 1];
-
-  // User-provided free-form text description.
-  optional string comment = 3;
-
-  // JSON-serialized key-value pair map, encoded (escaped) as a string.
-  map<string, string> properties = 4;
-
-  // Full name of schema, in form of catalog_name.schema_name.
-  string full_name = 5;
-
-  // Time at which this schema was created, in epoch milliseconds.
-  int64 created_at = 6;
-
-  // Time at which this schema was last updated, in epoch milliseconds.
-  int64 updated_at = 7;
-
-  // Unique identifier for the schema.
-  string schema_id = 8 [(buf.validate.field).string.min_len = 1];
 }

@@ -1,5 +1,5 @@
 // @generated
-impl serde::Serialize for CreateSchemaRequest {
+impl serde::Serialize for CreateVolumeRequest {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -13,29 +13,43 @@ impl serde::Serialize for CreateSchemaRequest {
         if !self.catalog_name.is_empty() {
             len += 1;
         }
+        if !self.schema_name.is_empty() {
+            len += 1;
+        }
+        if self.volume_type != 0 {
+            len += 1;
+        }
+        if !self.storage_location.is_empty() {
+            len += 1;
+        }
         if self.comment.is_some() {
             len += 1;
         }
-        if !self.properties.is_empty() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("unitycatalog.schemas.v1.CreateSchemaRequest", len)?;
+        let mut struct_ser = serializer.serialize_struct("unitycatalog.volumes.v1.CreateVolumeRequest", len)?;
         if !self.name.is_empty() {
             struct_ser.serialize_field("name", &self.name)?;
         }
         if !self.catalog_name.is_empty() {
             struct_ser.serialize_field("catalogName", &self.catalog_name)?;
         }
+        if !self.schema_name.is_empty() {
+            struct_ser.serialize_field("schemaName", &self.schema_name)?;
+        }
+        if self.volume_type != 0 {
+            let v = VolumeType::try_from(self.volume_type)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", self.volume_type)))?;
+            struct_ser.serialize_field("volumeType", &v)?;
+        }
+        if !self.storage_location.is_empty() {
+            struct_ser.serialize_field("storageLocation", &self.storage_location)?;
+        }
         if let Some(v) = self.comment.as_ref() {
             struct_ser.serialize_field("comment", v)?;
-        }
-        if !self.properties.is_empty() {
-            struct_ser.serialize_field("properties", &self.properties)?;
         }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for CreateSchemaRequest {
+impl<'de> serde::Deserialize<'de> for CreateVolumeRequest {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -45,16 +59,23 @@ impl<'de> serde::Deserialize<'de> for CreateSchemaRequest {
             "name",
             "catalog_name",
             "catalogName",
+            "schema_name",
+            "schemaName",
+            "volume_type",
+            "volumeType",
+            "storage_location",
+            "storageLocation",
             "comment",
-            "properties",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             Name,
             CatalogName,
+            SchemaName,
+            VolumeType,
+            StorageLocation,
             Comment,
-            Properties,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -78,8 +99,10 @@ impl<'de> serde::Deserialize<'de> for CreateSchemaRequest {
                         match value {
                             "name" => Ok(GeneratedField::Name),
                             "catalogName" | "catalog_name" => Ok(GeneratedField::CatalogName),
+                            "schemaName" | "schema_name" => Ok(GeneratedField::SchemaName),
+                            "volumeType" | "volume_type" => Ok(GeneratedField::VolumeType),
+                            "storageLocation" | "storage_location" => Ok(GeneratedField::StorageLocation),
                             "comment" => Ok(GeneratedField::Comment),
-                            "properties" => Ok(GeneratedField::Properties),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -89,20 +112,22 @@ impl<'de> serde::Deserialize<'de> for CreateSchemaRequest {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = CreateSchemaRequest;
+            type Value = CreateVolumeRequest;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct unitycatalog.schemas.v1.CreateSchemaRequest")
+                formatter.write_str("struct unitycatalog.volumes.v1.CreateVolumeRequest")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<CreateSchemaRequest, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<CreateVolumeRequest, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
                 let mut name__ = None;
                 let mut catalog_name__ = None;
+                let mut schema_name__ = None;
+                let mut volume_type__ = None;
+                let mut storage_location__ = None;
                 let mut comment__ = None;
-                let mut properties__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Name => {
@@ -117,34 +142,46 @@ impl<'de> serde::Deserialize<'de> for CreateSchemaRequest {
                             }
                             catalog_name__ = Some(map_.next_value()?);
                         }
+                        GeneratedField::SchemaName => {
+                            if schema_name__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("schemaName"));
+                            }
+                            schema_name__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::VolumeType => {
+                            if volume_type__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("volumeType"));
+                            }
+                            volume_type__ = Some(map_.next_value::<VolumeType>()? as i32);
+                        }
+                        GeneratedField::StorageLocation => {
+                            if storage_location__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("storageLocation"));
+                            }
+                            storage_location__ = Some(map_.next_value()?);
+                        }
                         GeneratedField::Comment => {
                             if comment__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("comment"));
                             }
                             comment__ = map_.next_value()?;
                         }
-                        GeneratedField::Properties => {
-                            if properties__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("properties"));
-                            }
-                            properties__ = Some(
-                                map_.next_value::<std::collections::HashMap<_, _>>()?
-                            );
-                        }
                     }
                 }
-                Ok(CreateSchemaRequest {
+                Ok(CreateVolumeRequest {
                     name: name__.unwrap_or_default(),
                     catalog_name: catalog_name__.unwrap_or_default(),
+                    schema_name: schema_name__.unwrap_or_default(),
+                    volume_type: volume_type__.unwrap_or_default(),
+                    storage_location: storage_location__.unwrap_or_default(),
                     comment: comment__,
-                    properties: properties__.unwrap_or_default(),
                 })
             }
         }
-        deserializer.deserialize_struct("unitycatalog.schemas.v1.CreateSchemaRequest", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("unitycatalog.volumes.v1.CreateVolumeRequest", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for CreateSchemaResponse {
+impl serde::Serialize for CreateVolumeResponse {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -152,29 +189,29 @@ impl serde::Serialize for CreateSchemaResponse {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if self.schema.is_some() {
+        if self.volume.is_some() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("unitycatalog.schemas.v1.CreateSchemaResponse", len)?;
-        if let Some(v) = self.schema.as_ref() {
-            struct_ser.serialize_field("schema", v)?;
+        let mut struct_ser = serializer.serialize_struct("unitycatalog.volumes.v1.CreateVolumeResponse", len)?;
+        if let Some(v) = self.volume.as_ref() {
+            struct_ser.serialize_field("volume", v)?;
         }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for CreateSchemaResponse {
+impl<'de> serde::Deserialize<'de> for CreateVolumeResponse {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "schema",
+            "volume",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            Schema,
+            Volume,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -196,7 +233,7 @@ impl<'de> serde::Deserialize<'de> for CreateSchemaResponse {
                         E: serde::de::Error,
                     {
                         match value {
-                            "schema" => Ok(GeneratedField::Schema),
+                            "volume" => Ok(GeneratedField::Volume),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -206,36 +243,36 @@ impl<'de> serde::Deserialize<'de> for CreateSchemaResponse {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = CreateSchemaResponse;
+            type Value = CreateVolumeResponse;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct unitycatalog.schemas.v1.CreateSchemaResponse")
+                formatter.write_str("struct unitycatalog.volumes.v1.CreateVolumeResponse")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<CreateSchemaResponse, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<CreateVolumeResponse, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut schema__ = None;
+                let mut volume__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::Schema => {
-                            if schema__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("schema"));
+                        GeneratedField::Volume => {
+                            if volume__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("volume"));
                             }
-                            schema__ = map_.next_value()?;
+                            volume__ = map_.next_value()?;
                         }
                     }
                 }
-                Ok(CreateSchemaResponse {
-                    schema: schema__,
+                Ok(CreateVolumeResponse {
+                    volume: volume__,
                 })
             }
         }
-        deserializer.deserialize_struct("unitycatalog.schemas.v1.CreateSchemaResponse", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("unitycatalog.volumes.v1.CreateVolumeResponse", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for DeleteSchemaRequest {
+impl serde::Serialize for DeleteVolumeRequest {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -246,14 +283,14 @@ impl serde::Serialize for DeleteSchemaRequest {
         if !self.full_name.is_empty() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("unitycatalog.schemas.v1.DeleteSchemaRequest", len)?;
+        let mut struct_ser = serializer.serialize_struct("unitycatalog.volumes.v1.DeleteVolumeRequest", len)?;
         if !self.full_name.is_empty() {
             struct_ser.serialize_field("fullName", &self.full_name)?;
         }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for DeleteSchemaRequest {
+impl<'de> serde::Deserialize<'de> for DeleteVolumeRequest {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -298,13 +335,13 @@ impl<'de> serde::Deserialize<'de> for DeleteSchemaRequest {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = DeleteSchemaRequest;
+            type Value = DeleteVolumeRequest;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct unitycatalog.schemas.v1.DeleteSchemaRequest")
+                formatter.write_str("struct unitycatalog.volumes.v1.DeleteVolumeRequest")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<DeleteSchemaRequest, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<DeleteVolumeRequest, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -319,15 +356,15 @@ impl<'de> serde::Deserialize<'de> for DeleteSchemaRequest {
                         }
                     }
                 }
-                Ok(DeleteSchemaRequest {
+                Ok(DeleteVolumeRequest {
                     full_name: full_name__.unwrap_or_default(),
                 })
             }
         }
-        deserializer.deserialize_struct("unitycatalog.schemas.v1.DeleteSchemaRequest", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("unitycatalog.volumes.v1.DeleteVolumeRequest", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for DeleteSchemaResponse {
+impl serde::Serialize for DeleteVolumeResponse {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -335,11 +372,11 @@ impl serde::Serialize for DeleteSchemaResponse {
     {
         use serde::ser::SerializeStruct;
         let len = 0;
-        let struct_ser = serializer.serialize_struct("unitycatalog.schemas.v1.DeleteSchemaResponse", len)?;
+        let struct_ser = serializer.serialize_struct("unitycatalog.volumes.v1.DeleteVolumeResponse", len)?;
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for DeleteSchemaResponse {
+impl<'de> serde::Deserialize<'de> for DeleteVolumeResponse {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -378,27 +415,27 @@ impl<'de> serde::Deserialize<'de> for DeleteSchemaResponse {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = DeleteSchemaResponse;
+            type Value = DeleteVolumeResponse;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct unitycatalog.schemas.v1.DeleteSchemaResponse")
+                formatter.write_str("struct unitycatalog.volumes.v1.DeleteVolumeResponse")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<DeleteSchemaResponse, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<DeleteVolumeResponse, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
                 while map_.next_key::<GeneratedField>()?.is_some() {
                     let _ = map_.next_value::<serde::de::IgnoredAny>()?;
                 }
-                Ok(DeleteSchemaResponse {
+                Ok(DeleteVolumeResponse {
                 })
             }
         }
-        deserializer.deserialize_struct("unitycatalog.schemas.v1.DeleteSchemaResponse", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("unitycatalog.volumes.v1.DeleteVolumeResponse", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for GetSchemaRequest {
+impl serde::Serialize for GetVolumeRequest {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -409,14 +446,14 @@ impl serde::Serialize for GetSchemaRequest {
         if !self.full_name.is_empty() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("unitycatalog.schemas.v1.GetSchemaRequest", len)?;
+        let mut struct_ser = serializer.serialize_struct("unitycatalog.volumes.v1.GetVolumeRequest", len)?;
         if !self.full_name.is_empty() {
             struct_ser.serialize_field("fullName", &self.full_name)?;
         }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for GetSchemaRequest {
+impl<'de> serde::Deserialize<'de> for GetVolumeRequest {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -461,13 +498,13 @@ impl<'de> serde::Deserialize<'de> for GetSchemaRequest {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = GetSchemaRequest;
+            type Value = GetVolumeRequest;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct unitycatalog.schemas.v1.GetSchemaRequest")
+                formatter.write_str("struct unitycatalog.volumes.v1.GetVolumeRequest")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetSchemaRequest, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetVolumeRequest, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
@@ -482,15 +519,15 @@ impl<'de> serde::Deserialize<'de> for GetSchemaRequest {
                         }
                     }
                 }
-                Ok(GetSchemaRequest {
+                Ok(GetVolumeRequest {
                     full_name: full_name__.unwrap_or_default(),
                 })
             }
         }
-        deserializer.deserialize_struct("unitycatalog.schemas.v1.GetSchemaRequest", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("unitycatalog.volumes.v1.GetVolumeRequest", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for GetSchemaResponse {
+impl serde::Serialize for GetVolumeResponse {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -498,29 +535,29 @@ impl serde::Serialize for GetSchemaResponse {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if self.schema.is_some() {
+        if self.volume.is_some() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("unitycatalog.schemas.v1.GetSchemaResponse", len)?;
-        if let Some(v) = self.schema.as_ref() {
-            struct_ser.serialize_field("schema", v)?;
+        let mut struct_ser = serializer.serialize_struct("unitycatalog.volumes.v1.GetVolumeResponse", len)?;
+        if let Some(v) = self.volume.as_ref() {
+            struct_ser.serialize_field("volume", v)?;
         }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for GetSchemaResponse {
+impl<'de> serde::Deserialize<'de> for GetVolumeResponse {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "schema",
+            "volume",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            Schema,
+            Volume,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -542,7 +579,7 @@ impl<'de> serde::Deserialize<'de> for GetSchemaResponse {
                         E: serde::de::Error,
                     {
                         match value {
-                            "schema" => Ok(GeneratedField::Schema),
+                            "volume" => Ok(GeneratedField::Volume),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -552,36 +589,36 @@ impl<'de> serde::Deserialize<'de> for GetSchemaResponse {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = GetSchemaResponse;
+            type Value = GetVolumeResponse;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct unitycatalog.schemas.v1.GetSchemaResponse")
+                formatter.write_str("struct unitycatalog.volumes.v1.GetVolumeResponse")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetSchemaResponse, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetVolumeResponse, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut schema__ = None;
+                let mut volume__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::Schema => {
-                            if schema__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("schema"));
+                        GeneratedField::Volume => {
+                            if volume__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("volume"));
                             }
-                            schema__ = map_.next_value()?;
+                            volume__ = map_.next_value()?;
                         }
                     }
                 }
-                Ok(GetSchemaResponse {
-                    schema: schema__,
+                Ok(GetVolumeResponse {
+                    volume: volume__,
                 })
             }
         }
-        deserializer.deserialize_struct("unitycatalog.schemas.v1.GetSchemaResponse", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("unitycatalog.volumes.v1.GetVolumeResponse", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for ListSchemasRequest {
+impl serde::Serialize for ListVolumesRequest {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -592,15 +629,21 @@ impl serde::Serialize for ListSchemasRequest {
         if !self.catalog_name.is_empty() {
             len += 1;
         }
+        if !self.schema_name.is_empty() {
+            len += 1;
+        }
         if self.max_results.is_some() {
             len += 1;
         }
         if self.page_token.is_some() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("unitycatalog.schemas.v1.ListSchemasRequest", len)?;
+        let mut struct_ser = serializer.serialize_struct("unitycatalog.volumes.v1.ListVolumesRequest", len)?;
         if !self.catalog_name.is_empty() {
             struct_ser.serialize_field("catalogName", &self.catalog_name)?;
+        }
+        if !self.schema_name.is_empty() {
+            struct_ser.serialize_field("schemaName", &self.schema_name)?;
         }
         if let Some(v) = self.max_results.as_ref() {
             struct_ser.serialize_field("maxResults", v)?;
@@ -611,7 +654,7 @@ impl serde::Serialize for ListSchemasRequest {
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for ListSchemasRequest {
+impl<'de> serde::Deserialize<'de> for ListVolumesRequest {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -620,6 +663,8 @@ impl<'de> serde::Deserialize<'de> for ListSchemasRequest {
         const FIELDS: &[&str] = &[
             "catalog_name",
             "catalogName",
+            "schema_name",
+            "schemaName",
             "max_results",
             "maxResults",
             "page_token",
@@ -629,6 +674,7 @@ impl<'de> serde::Deserialize<'de> for ListSchemasRequest {
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             CatalogName,
+            SchemaName,
             MaxResults,
             PageToken,
         }
@@ -653,6 +699,7 @@ impl<'de> serde::Deserialize<'de> for ListSchemasRequest {
                     {
                         match value {
                             "catalogName" | "catalog_name" => Ok(GeneratedField::CatalogName),
+                            "schemaName" | "schema_name" => Ok(GeneratedField::SchemaName),
                             "maxResults" | "max_results" => Ok(GeneratedField::MaxResults),
                             "pageToken" | "page_token" => Ok(GeneratedField::PageToken),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
@@ -664,17 +711,18 @@ impl<'de> serde::Deserialize<'de> for ListSchemasRequest {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = ListSchemasRequest;
+            type Value = ListVolumesRequest;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct unitycatalog.schemas.v1.ListSchemasRequest")
+                formatter.write_str("struct unitycatalog.volumes.v1.ListVolumesRequest")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListSchemasRequest, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListVolumesRequest, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
                 let mut catalog_name__ = None;
+                let mut schema_name__ = None;
                 let mut max_results__ = None;
                 let mut page_token__ = None;
                 while let Some(k) = map_.next_key()? {
@@ -684,6 +732,12 @@ impl<'de> serde::Deserialize<'de> for ListSchemasRequest {
                                 return Err(serde::de::Error::duplicate_field("catalogName"));
                             }
                             catalog_name__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::SchemaName => {
+                            if schema_name__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("schemaName"));
+                            }
+                            schema_name__ = Some(map_.next_value()?);
                         }
                         GeneratedField::MaxResults => {
                             if max_results__.is_some() {
@@ -701,17 +755,18 @@ impl<'de> serde::Deserialize<'de> for ListSchemasRequest {
                         }
                     }
                 }
-                Ok(ListSchemasRequest {
+                Ok(ListVolumesRequest {
                     catalog_name: catalog_name__.unwrap_or_default(),
+                    schema_name: schema_name__.unwrap_or_default(),
                     max_results: max_results__,
                     page_token: page_token__,
                 })
             }
         }
-        deserializer.deserialize_struct("unitycatalog.schemas.v1.ListSchemasRequest", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("unitycatalog.volumes.v1.ListVolumesRequest", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for ListSchemasResponse {
+impl serde::Serialize for UpdateVolumeRequest {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -719,38 +774,47 @@ impl serde::Serialize for ListSchemasResponse {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.schemas.is_empty() {
+        if !self.full_name.is_empty() {
             len += 1;
         }
-        if !self.next_page_token.is_empty() {
+        if !self.new_name.is_empty() {
             len += 1;
         }
-        let mut struct_ser = serializer.serialize_struct("unitycatalog.schemas.v1.ListSchemasResponse", len)?;
-        if !self.schemas.is_empty() {
-            struct_ser.serialize_field("schemas", &self.schemas)?;
+        if self.comment.is_some() {
+            len += 1;
         }
-        if !self.next_page_token.is_empty() {
-            struct_ser.serialize_field("nextPageToken", &self.next_page_token)?;
+        let mut struct_ser = serializer.serialize_struct("unitycatalog.volumes.v1.UpdateVolumeRequest", len)?;
+        if !self.full_name.is_empty() {
+            struct_ser.serialize_field("fullName", &self.full_name)?;
+        }
+        if !self.new_name.is_empty() {
+            struct_ser.serialize_field("newName", &self.new_name)?;
+        }
+        if let Some(v) = self.comment.as_ref() {
+            struct_ser.serialize_field("comment", v)?;
         }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for ListSchemasResponse {
+impl<'de> serde::Deserialize<'de> for UpdateVolumeRequest {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "schemas",
-            "next_page_token",
-            "nextPageToken",
+            "full_name",
+            "fullName",
+            "new_name",
+            "newName",
+            "comment",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            Schemas,
-            NextPageToken,
+            FullName,
+            NewName,
+            Comment,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -772,8 +836,9 @@ impl<'de> serde::Deserialize<'de> for ListSchemasResponse {
                         E: serde::de::Error,
                     {
                         match value {
-                            "schemas" => Ok(GeneratedField::Schemas),
-                            "nextPageToken" | "next_page_token" => Ok(GeneratedField::NextPageToken),
+                            "fullName" | "full_name" => Ok(GeneratedField::FullName),
+                            "newName" | "new_name" => Ok(GeneratedField::NewName),
+                            "comment" => Ok(GeneratedField::Comment),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -783,44 +848,143 @@ impl<'de> serde::Deserialize<'de> for ListSchemasResponse {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = ListSchemasResponse;
+            type Value = UpdateVolumeRequest;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct unitycatalog.schemas.v1.ListSchemasResponse")
+                formatter.write_str("struct unitycatalog.volumes.v1.UpdateVolumeRequest")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListSchemasResponse, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<UpdateVolumeRequest, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut schemas__ = None;
-                let mut next_page_token__ = None;
+                let mut full_name__ = None;
+                let mut new_name__ = None;
+                let mut comment__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::Schemas => {
-                            if schemas__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("schemas"));
+                        GeneratedField::FullName => {
+                            if full_name__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("fullName"));
                             }
-                            schemas__ = Some(map_.next_value()?);
+                            full_name__ = Some(map_.next_value()?);
                         }
-                        GeneratedField::NextPageToken => {
-                            if next_page_token__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("nextPageToken"));
+                        GeneratedField::NewName => {
+                            if new_name__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("newName"));
                             }
-                            next_page_token__ = Some(map_.next_value()?);
+                            new_name__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Comment => {
+                            if comment__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("comment"));
+                            }
+                            comment__ = map_.next_value()?;
                         }
                     }
                 }
-                Ok(ListSchemasResponse {
-                    schemas: schemas__.unwrap_or_default(),
-                    next_page_token: next_page_token__.unwrap_or_default(),
+                Ok(UpdateVolumeRequest {
+                    full_name: full_name__.unwrap_or_default(),
+                    new_name: new_name__.unwrap_or_default(),
+                    comment: comment__,
                 })
             }
         }
-        deserializer.deserialize_struct("unitycatalog.schemas.v1.ListSchemasResponse", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("unitycatalog.volumes.v1.UpdateVolumeRequest", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for SchemaInfo {
+impl serde::Serialize for UpdateVolumeResponse {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.volume.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("unitycatalog.volumes.v1.UpdateVolumeResponse", len)?;
+        if let Some(v) = self.volume.as_ref() {
+            struct_ser.serialize_field("volume", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for UpdateVolumeResponse {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "volume",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Volume,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "volume" => Ok(GeneratedField::Volume),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = UpdateVolumeResponse;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct unitycatalog.volumes.v1.UpdateVolumeResponse")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<UpdateVolumeResponse, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut volume__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Volume => {
+                            if volume__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("volume"));
+                            }
+                            volume__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(UpdateVolumeResponse {
+                    volume: volume__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("unitycatalog.volumes.v1.UpdateVolumeResponse", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for VolumeInfo {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
@@ -834,55 +998,43 @@ impl serde::Serialize for SchemaInfo {
         if !self.catalog_name.is_empty() {
             len += 1;
         }
+        if !self.schema_name.is_empty() {
+            len += 1;
+        }
+        if self.volume_type != 0 {
+            len += 1;
+        }
+        if !self.storage_location.is_empty() {
+            len += 1;
+        }
         if self.comment.is_some() {
             len += 1;
         }
-        if !self.properties.is_empty() {
-            len += 1;
-        }
-        if !self.full_name.is_empty() {
-            len += 1;
-        }
-        if self.created_at != 0 {
-            len += 1;
-        }
-        if self.updated_at != 0 {
-            len += 1;
-        }
-        if !self.schema_id.is_empty() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("unitycatalog.schemas.v1.SchemaInfo", len)?;
+        let mut struct_ser = serializer.serialize_struct("unitycatalog.volumes.v1.VolumeInfo", len)?;
         if !self.name.is_empty() {
             struct_ser.serialize_field("name", &self.name)?;
         }
         if !self.catalog_name.is_empty() {
             struct_ser.serialize_field("catalogName", &self.catalog_name)?;
         }
+        if !self.schema_name.is_empty() {
+            struct_ser.serialize_field("schemaName", &self.schema_name)?;
+        }
+        if self.volume_type != 0 {
+            let v = VolumeType::try_from(self.volume_type)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", self.volume_type)))?;
+            struct_ser.serialize_field("volumeType", &v)?;
+        }
+        if !self.storage_location.is_empty() {
+            struct_ser.serialize_field("storageLocation", &self.storage_location)?;
+        }
         if let Some(v) = self.comment.as_ref() {
             struct_ser.serialize_field("comment", v)?;
-        }
-        if !self.properties.is_empty() {
-            struct_ser.serialize_field("properties", &self.properties)?;
-        }
-        if !self.full_name.is_empty() {
-            struct_ser.serialize_field("fullName", &self.full_name)?;
-        }
-        if self.created_at != 0 {
-            #[allow(clippy::needless_borrow)]
-            struct_ser.serialize_field("createdAt", ToString::to_string(&self.created_at).as_str())?;
-        }
-        if self.updated_at != 0 {
-            #[allow(clippy::needless_borrow)]
-            struct_ser.serialize_field("updatedAt", ToString::to_string(&self.updated_at).as_str())?;
-        }
-        if !self.schema_id.is_empty() {
-            struct_ser.serialize_field("schemaId", &self.schema_id)?;
         }
         struct_ser.end()
     }
 }
-impl<'de> serde::Deserialize<'de> for SchemaInfo {
+impl<'de> serde::Deserialize<'de> for VolumeInfo {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
@@ -892,28 +1044,23 @@ impl<'de> serde::Deserialize<'de> for SchemaInfo {
             "name",
             "catalog_name",
             "catalogName",
+            "schema_name",
+            "schemaName",
+            "volume_type",
+            "volumeType",
+            "storage_location",
+            "storageLocation",
             "comment",
-            "properties",
-            "full_name",
-            "fullName",
-            "created_at",
-            "createdAt",
-            "updated_at",
-            "updatedAt",
-            "schema_id",
-            "schemaId",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             Name,
             CatalogName,
+            SchemaName,
+            VolumeType,
+            StorageLocation,
             Comment,
-            Properties,
-            FullName,
-            CreatedAt,
-            UpdatedAt,
-            SchemaId,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -937,12 +1084,10 @@ impl<'de> serde::Deserialize<'de> for SchemaInfo {
                         match value {
                             "name" => Ok(GeneratedField::Name),
                             "catalogName" | "catalog_name" => Ok(GeneratedField::CatalogName),
+                            "schemaName" | "schema_name" => Ok(GeneratedField::SchemaName),
+                            "volumeType" | "volume_type" => Ok(GeneratedField::VolumeType),
+                            "storageLocation" | "storage_location" => Ok(GeneratedField::StorageLocation),
                             "comment" => Ok(GeneratedField::Comment),
-                            "properties" => Ok(GeneratedField::Properties),
-                            "fullName" | "full_name" => Ok(GeneratedField::FullName),
-                            "createdAt" | "created_at" => Ok(GeneratedField::CreatedAt),
-                            "updatedAt" | "updated_at" => Ok(GeneratedField::UpdatedAt),
-                            "schemaId" | "schema_id" => Ok(GeneratedField::SchemaId),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -952,24 +1097,22 @@ impl<'de> serde::Deserialize<'de> for SchemaInfo {
         }
         struct GeneratedVisitor;
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = SchemaInfo;
+            type Value = VolumeInfo;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct unitycatalog.schemas.v1.SchemaInfo")
+                formatter.write_str("struct unitycatalog.volumes.v1.VolumeInfo")
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<SchemaInfo, V::Error>
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<VolumeInfo, V::Error>
                 where
                     V: serde::de::MapAccess<'de>,
             {
                 let mut name__ = None;
                 let mut catalog_name__ = None;
+                let mut schema_name__ = None;
+                let mut volume_type__ = None;
+                let mut storage_location__ = None;
                 let mut comment__ = None;
-                let mut properties__ = None;
-                let mut full_name__ = None;
-                let mut created_at__ = None;
-                let mut updated_at__ = None;
-                let mut schema_id__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Name => {
@@ -984,299 +1127,178 @@ impl<'de> serde::Deserialize<'de> for SchemaInfo {
                             }
                             catalog_name__ = Some(map_.next_value()?);
                         }
+                        GeneratedField::SchemaName => {
+                            if schema_name__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("schemaName"));
+                            }
+                            schema_name__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::VolumeType => {
+                            if volume_type__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("volumeType"));
+                            }
+                            volume_type__ = Some(map_.next_value::<VolumeType>()? as i32);
+                        }
+                        GeneratedField::StorageLocation => {
+                            if storage_location__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("storageLocation"));
+                            }
+                            storage_location__ = Some(map_.next_value()?);
+                        }
                         GeneratedField::Comment => {
                             if comment__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("comment"));
                             }
                             comment__ = map_.next_value()?;
                         }
-                        GeneratedField::Properties => {
-                            if properties__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("properties"));
-                            }
-                            properties__ = Some(
-                                map_.next_value::<std::collections::HashMap<_, _>>()?
-                            );
-                        }
-                        GeneratedField::FullName => {
-                            if full_name__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("fullName"));
-                            }
-                            full_name__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::CreatedAt => {
-                            if created_at__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("createdAt"));
-                            }
-                            created_at__ = 
-                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
-                            ;
-                        }
-                        GeneratedField::UpdatedAt => {
-                            if updated_at__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("updatedAt"));
-                            }
-                            updated_at__ = 
-                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
-                            ;
-                        }
-                        GeneratedField::SchemaId => {
-                            if schema_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("schemaId"));
-                            }
-                            schema_id__ = Some(map_.next_value()?);
-                        }
                     }
                 }
-                Ok(SchemaInfo {
+                Ok(VolumeInfo {
                     name: name__.unwrap_or_default(),
                     catalog_name: catalog_name__.unwrap_or_default(),
+                    schema_name: schema_name__.unwrap_or_default(),
+                    volume_type: volume_type__.unwrap_or_default(),
+                    storage_location: storage_location__.unwrap_or_default(),
                     comment: comment__,
-                    properties: properties__.unwrap_or_default(),
-                    full_name: full_name__.unwrap_or_default(),
-                    created_at: created_at__.unwrap_or_default(),
-                    updated_at: updated_at__.unwrap_or_default(),
-                    schema_id: schema_id__.unwrap_or_default(),
                 })
             }
         }
-        deserializer.deserialize_struct("unitycatalog.schemas.v1.SchemaInfo", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_struct("unitycatalog.volumes.v1.VolumeInfo", FIELDS, GeneratedVisitor)
     }
 }
-impl serde::Serialize for UpdateSchemaRequest {
+impl serde::Serialize for VolumeOperation {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
         S: serde::Serializer,
     {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if !self.full_name.is_empty() {
-            len += 1;
-        }
-        if self.comment.is_some() {
-            len += 1;
-        }
-        if !self.properties.is_empty() {
-            len += 1;
-        }
-        if !self.new_name.is_empty() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("unitycatalog.schemas.v1.UpdateSchemaRequest", len)?;
-        if !self.full_name.is_empty() {
-            struct_ser.serialize_field("fullName", &self.full_name)?;
-        }
-        if let Some(v) = self.comment.as_ref() {
-            struct_ser.serialize_field("comment", v)?;
-        }
-        if !self.properties.is_empty() {
-            struct_ser.serialize_field("properties", &self.properties)?;
-        }
-        if !self.new_name.is_empty() {
-            struct_ser.serialize_field("newName", &self.new_name)?;
-        }
-        struct_ser.end()
+        let variant = match self {
+            Self::Unspecified => "VOLUME_OPERATION_UNSPECIFIED",
+        };
+        serializer.serialize_str(variant)
     }
 }
-impl<'de> serde::Deserialize<'de> for UpdateSchemaRequest {
+impl<'de> serde::Deserialize<'de> for VolumeOperation {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "full_name",
-            "fullName",
-            "comment",
-            "properties",
-            "new_name",
-            "newName",
+            "VOLUME_OPERATION_UNSPECIFIED",
         ];
 
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            FullName,
-            Comment,
-            Properties,
-            NewName,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "fullName" | "full_name" => Ok(GeneratedField::FullName),
-                            "comment" => Ok(GeneratedField::Comment),
-                            "properties" => Ok(GeneratedField::Properties),
-                            "newName" | "new_name" => Ok(GeneratedField::NewName),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
         struct GeneratedVisitor;
+
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = UpdateSchemaRequest;
+            type Value = VolumeOperation;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct unitycatalog.schemas.v1.UpdateSchemaRequest")
+                write!(formatter, "expected one of: {:?}", &FIELDS)
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<UpdateSchemaRequest, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
+            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
             {
-                let mut full_name__ = None;
-                let mut comment__ = None;
-                let mut properties__ = None;
-                let mut new_name__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::FullName => {
-                            if full_name__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("fullName"));
-                            }
-                            full_name__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::Comment => {
-                            if comment__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("comment"));
-                            }
-                            comment__ = map_.next_value()?;
-                        }
-                        GeneratedField::Properties => {
-                            if properties__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("properties"));
-                            }
-                            properties__ = Some(
-                                map_.next_value::<std::collections::HashMap<_, _>>()?
-                            );
-                        }
-                        GeneratedField::NewName => {
-                            if new_name__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("newName"));
-                            }
-                            new_name__ = Some(map_.next_value()?);
-                        }
-                    }
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
+                    })
+            }
+
+            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
+                    })
+            }
+
+            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                match value {
+                    "VOLUME_OPERATION_UNSPECIFIED" => Ok(VolumeOperation::Unspecified),
+                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
                 }
-                Ok(UpdateSchemaRequest {
-                    full_name: full_name__.unwrap_or_default(),
-                    comment: comment__,
-                    properties: properties__.unwrap_or_default(),
-                    new_name: new_name__.unwrap_or_default(),
-                })
             }
         }
-        deserializer.deserialize_struct("unitycatalog.schemas.v1.UpdateSchemaRequest", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_any(GeneratedVisitor)
     }
 }
-impl serde::Serialize for UpdateSchemaResponse {
+impl serde::Serialize for VolumeType {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
         S: serde::Serializer,
     {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.schema.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("unitycatalog.schemas.v1.UpdateSchemaResponse", len)?;
-        if let Some(v) = self.schema.as_ref() {
-            struct_ser.serialize_field("schema", v)?;
-        }
-        struct_ser.end()
+        let variant = match self {
+            Self::Unspecified => "VOLUME_TYPE_UNSPECIFIED",
+        };
+        serializer.serialize_str(variant)
     }
 }
-impl<'de> serde::Deserialize<'de> for UpdateSchemaResponse {
+impl<'de> serde::Deserialize<'de> for VolumeType {
     #[allow(deprecated)]
     fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
     where
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "schema",
+            "VOLUME_TYPE_UNSPECIFIED",
         ];
 
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Schema,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "schema" => Ok(GeneratedField::Schema),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
         struct GeneratedVisitor;
+
         impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = UpdateSchemaResponse;
+            type Value = VolumeType;
 
             fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct unitycatalog.schemas.v1.UpdateSchemaResponse")
+                write!(formatter, "expected one of: {:?}", &FIELDS)
             }
 
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<UpdateSchemaResponse, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
+            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
             {
-                let mut schema__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::Schema => {
-                            if schema__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("schema"));
-                            }
-                            schema__ = map_.next_value()?;
-                        }
-                    }
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
+                    })
+            }
+
+            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
+                    })
+            }
+
+            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                match value {
+                    "VOLUME_TYPE_UNSPECIFIED" => Ok(VolumeType::Unspecified),
+                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
                 }
-                Ok(UpdateSchemaResponse {
-                    schema: schema__,
-                })
             }
         }
-        deserializer.deserialize_struct("unitycatalog.schemas.v1.UpdateSchemaResponse", FIELDS, GeneratedVisitor)
+        deserializer.deserialize_any(GeneratedVisitor)
     }
 }
