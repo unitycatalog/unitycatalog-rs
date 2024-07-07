@@ -1,0 +1,186 @@
+syntax = "proto3";
+
+package unitycatalog.v1;
+
+import "buf/validate/validate.proto";
+
+// Creates a new catalog instance.
+message CatalogInfo {
+  // unique identifier for the catalog.
+  string id = 1 [(buf.validate.field).string.min_len = 1];
+
+  // The name of the catalog.
+  string name = 2 [(buf.validate.field).string.min_len = 1];
+
+  // User-provided free-form text description.
+  optional string comment = 3;
+
+  // A map of key-value properties attached to the securable.
+  map<string, string> properties = 4;
+
+  // Time at which this catalog was created, in epoch milliseconds.
+  int64 created_at = 5;
+
+  // Time at which this catalog was last updated, in epoch milliseconds.
+  int64 updated_at = 6;
+}
+
+// TODO(roeap): in the jvm repo this type seems to have no fields, seems wrong?
+enum ColumnTypeName {
+  COLUMN_TYPE_UNSPECIFIED = 0;
+}
+
+message TableDependency {
+  // Full name of the dependent table, in the form of catalog_name.schema_name.table_name.
+  string table_full_name = 1 [(buf.validate.field).string.min_len = 1];
+}
+
+message FunctionDependency {
+  // Full name of the dependent function, in the form of catalog_name.schema_name.function_name.
+  string function_full_name = 1 [(buf.validate.field).string.min_len = 1];
+}
+
+message Dependency {
+  oneof dependency {
+    TableDependency table = 1;
+    FunctionDependency function = 2;
+  }
+}
+
+message DependencyList {
+  repeated Dependency dependencies = 1;
+}
+
+enum FunctionParameterMode {
+  FUNCTION_PARAMETER_MODE_UNSPECIFIED = 0;
+}
+
+enum FunctionParameterType {
+  FUNCTION_PARAMETER_TYPE_UNSPECIFIED = 0;
+}
+
+message FunctionParameterInfo {
+  // The name of the parameter.
+  string name = 1 [(buf.validate.field).string.min_len = 1];
+
+  // Full data type spec, SQL/catalogString text.
+  string type_text = 2 [(buf.validate.field).string.min_len = 1];
+
+  // Full data type spec, JSON-serialized.
+  string type_json = 3 [(buf.validate.field).string.min_len = 1];
+
+  ColumnTypeName type_name = 4;
+
+  // Digits of precision; required on Create for DecimalTypes.
+  int32 type_precision = 5;
+
+  // Digits to right of decimal; Required on Create for DecimalTypes.
+  int32 type_scale = 6;
+
+  // Format of IntervalType.
+  string type_interval_type = 7;
+
+  // Ordinal position of column (starting at position 0).
+  int32 position = 8;
+}
+
+message FunctionParameterInfos {
+  repeated FunctionParameterInfo parameters = 1;
+}
+
+message FunctionInfo {
+  // Name of function, relative to parent schema.
+  string name = 1 [(buf.validate.field).string.min_len = 1];
+
+  // Name of parent catalog.
+  string catalog_name = 2 [(buf.validate.field).string.min_len = 1];
+
+  // Name of parent schema relative to its parent catalog.
+  string schema_name = 3 [(buf.validate.field).string.min_len = 1];
+
+  FunctionParameterInfos input_params = 4;
+
+  ColumnTypeName data_type = 5;
+
+  // Pretty printed function data type.
+  string full_data_type = 6 [(buf.validate.field).string.min_len = 1];
+
+  FunctionParameterInfos return_params = 7;
+
+  // Function language. When EXTERNAL is used, the language of the routine function
+  // should be specified in the external_language field, and the return_params
+  // of the function cannot be used (as TABLE return type is not supported),
+  // and the sql_data_access field must be NO_SQL.
+  // TODO(roeap): should this be an enum? If so, what are the valid values?
+  string routine_body = 8;
+
+  // Function body
+  string routine_definition = 9;
+
+  DependencyList routine_dependencies = 10;
+
+  // Function parameter style. S is the value for SQL.
+  // TODO(roeap): should this be an enum? If so, what are the valid values?
+  string parameter_style = 11;
+
+  // Whether the function is deterministic.
+  bool is_deterministic = 12;
+
+  // Function SQL data access.
+  string sql_data_access = 13;
+
+  bool is_null_call = 14;
+
+  // Function security type.
+  string security_type = 15;
+
+  // Specific name of the function; Reserved for future use.
+  string specific_name = 16;
+
+  // User-provided free-form text description.
+  optional string comment = 17;
+
+  // JSON-serialized key-value pair map, encoded (escaped) as a string.
+  map<string, string> properties = 18;
+
+  // Full name of function, in form of catalog_name.schema_name.function__name
+  string full_name = 19 [(buf.validate.field).string.min_len = 1];
+
+  // External language of the function.
+  string external_language = 23 [(buf.validate.field).string.min_len = 1];
+
+  // Time at which this function was created, in epoch milliseconds.
+  int64 created_at = 20;
+
+  // Time at which this function was last updated, in epoch milliseconds.
+  int64 updated_at = 21;
+
+  // Id of Function, relative to parent schema.
+  string function_id = 22 [(buf.validate.field).string.min_len = 1];
+}
+
+message SchemaInfo {
+  // Name of the schema, relative to its parent catalog.
+  string name = 1 [(buf.validate.field).string.min_len = 1];
+
+  // Name of parent catalog.
+  string catalog_name = 2 [(buf.validate.field).string.min_len = 1];
+
+  // User-provided free-form text description.
+  optional string comment = 3;
+
+  // JSON-serialized key-value pair map, encoded (escaped) as a string.
+  map<string, string> properties = 4;
+
+  // Full name of schema, in form of catalog_name.schema_name.
+  string full_name = 5;
+
+  // Time at which this schema was created, in epoch milliseconds.
+  int64 created_at = 6;
+
+  // Time at which this schema was last updated, in epoch milliseconds.
+  int64 updated_at = 7;
+
+  // Unique identifier for the schema.
+  string schema_id = 8 [(buf.validate.field).string.min_len = 1];
+}

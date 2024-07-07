@@ -10,6 +10,8 @@ publish = false
 
 [dependencies]
 strum = { version = "0.26", features = ["derive"] }
+pbjson = { version = "0.6" }
+prost = { version = "0.12" }
 
 serde = { workspace = true }
 serde_json = { workspace = true }
