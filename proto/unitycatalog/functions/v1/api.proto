@@ -1,0 +1,142 @@
+syntax = "proto3";
+
+package unitycatalog.functions.v1;
+
+import "buf/validate/validate.proto";
+import "unitycatalog/functions/v1/models.proto";
+import "unitycatalog/tables/v1/models.proto";
+
+// TODO(roeap): This type essentially just replicates the `FunctionInfo`, with a few
+// fields missing. Since its quite complex and still considered experimantal, maybe
+// the types can be consolidated.
+message CreateFunction {
+  // Name of function, relative to parent schema.
+  string name = 1 [(buf.validate.field).string.min_len = 1];
+
+  // Name of parent catalog.
+  string catalog_name = 2 [(buf.validate.field).string.min_len = 1];
+
+  // Name of parent schema relative to its parent catalog.
+  string schema_name = 3 [(buf.validate.field).string.min_len = 1];
+
+  FunctionParameterInfos input_params = 4;
+
+  unitycatalog.tables.v1.ColumnTypeName data_type = 5;
+
+  // Pretty printed function data type.
+  string full_data_type = 6 [(buf.validate.field).string.min_len = 1];
+
+  FunctionParameterInfos return_params = 7;
+
+  // Function language. When EXTERNAL is used, the language of the routine function
+  // should be specified in the external_language field, and the return_params
+  // of the function cannot be used (as TABLE return type is not supported),
+  // and the sql_data_access field must be NO_SQL.
+  // TODO(roeap): should this be an enum? If so, what are the valid values?
+  string routine_body = 8;
+
+  // Function body
+  string routine_definition = 9;
+
+  DependencyList routine_dependencies = 10;
+
+  // Function parameter style. S is the value for SQL.
+  // TODO(roeap): should this be an enum? If so, what are the valid values?
+  string parameter_style = 11;
+
+  // Whether the function is deterministic.
+  bool is_deterministic = 12;
+
+  // Function SQL data access.
+  string sql_data_access = 13;
+
+  bool is_null_call = 14;
+
+  // Function security type.
+  string security_type = 15;
+
+  // Specific name of the function; Reserved for future use.
+  string specific_name = 16;
+
+  // User-provided free-form text description.
+  optional string comment = 17;
+
+  // JSON-serialized key-value pair map, encoded (escaped) as a string.
+  map<string, string> properties = 18;
+
+  // Full name of function, in form of catalog_name.schema_name.function__name
+  string full_name = 19 [(buf.validate.field).string.min_len = 1];
+
+  // External language of the function.
+  string external_language = 23 [(buf.validate.field).string.min_len = 1];
+}
+
+// Creates a new function instance. WARNING: This API is experimental and will change in future versions.
+message CreateFunctionRequest {
+  // The function to create.
+  CreateFunction function_info = 1;
+}
+
+message CreateFunctionResponse {
+  // The created function.
+  FunctionInfo function = 1;
+}
+
+// Deletes the function that matches the supplied name.
+message DeleteFunctionRequest {
+  // The fully-qualified name of the function (of the form catalog_name.schema_name.function__name).
+  string name = 1 [(buf.validate.field).string.min_len = 1];
+}
+
+message DeleteFunctionResponse {}
+
+// Gets a function from within a parent catalog and schema.
+message GetFunctionRequest {
+  // The fully-qualified name of the function (of the form catalog_name.schema_name.function__name).
+  string name = 1 [(buf.validate.field).string.min_len = 1];
+}
+
+message GetFunctionResponse {
+  // The function.
+  FunctionInfo function = 1;
+}
+
+// List functions within the specified parent catalog and schema.
+// There is no guarantee of a specific ordering of the elements in the array.
+message ListFunctionsRequest {
+  // The name of the parent catalog.
+  string catalog_name = 1 [(buf.validate.field).string.min_len = 1];
+
+  // The name of the parent schema.
+  string schema_name = 2 [(buf.validate.field).string.min_len = 1];
+
+  optional int32 max_results = 3 [(buf.validate.field).int32.gte = 0];
+
+  // Specifies a page token to use. Set pageToken to the nextPageToken returned
+  // by a previous list request to get the next page of results.
+  // next_page_token will not be returned in a response if there are no more results available.
+  optional string page_token = 4;
+}
+
+message ListFunctionsResponse {
+  // The functions.
+  repeated FunctionInfo functions = 1;
+
+  // A token that can be sent as page_token to retrieve the next page.
+  // If this field is omitted, there are no more results.
+  optional string next_page_token = 2;
+}
+
+service FunctionsService {
+  // Creates a new function instance.
+  rpc CreateFunction(CreateFunctionRequest) returns (CreateFunctionResponse);
+
+  // Deletes the function that matches the supplied name.
+  rpc DeleteFunction(DeleteFunctionRequest) returns (DeleteFunctionResponse);
+
+  // Gets a function from within a parent catalog and schema.
+  rpc GetFunction(GetFunctionRequest) returns (GetFunctionResponse);
+
+  // List functions within the specified parent catalog and schema.
+  rpc ListFunctions(ListFunctionsRequest) returns (ListFunctionsResponse);
+}

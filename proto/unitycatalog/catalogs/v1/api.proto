@@ -1,0 +1,105 @@
+syntax = "proto3";
+
+package unitycatalog.catalogs.v1;
+
+import "buf/validate/validate.proto";
+import "unitycatalog/catalogs/v1/models.proto";
+
+// Creates a new catalog instance.
+message CreateCatalogRequest {
+  // The name of the catalog.
+  string name = 1 [(buf.validate.field).string.min_len = 1];
+
+  // User-provided free-form text description.
+  optional string comment = 2;
+
+  // A map of key-value properties attached to the securable.
+  map<string, string> properties = 3;
+}
+
+message CreateCatalogResponse {
+  // The newly created catalog.
+  CatalogInfo catalog = 1;
+}
+
+// Deletes the catalog that matches the supplied name.
+message DeleteCatalogRequest {
+  // The name of the catalog.
+  string name = 1 [(buf.validate.field).string.min_len = 1];
+
+  // Force deletion even if the catalog is not empty.
+  optional bool force = 2;
+}
+
+message DeleteCatalogResponse {}
+
+// Gets the specified catalog.
+message GetCatalogRequest {
+  // The name of the catalog.
+  string name = 1 [(buf.validate.field).string.min_len = 1];
+}
+
+message GetCatalogResponse {
+  // The catalog.
+  CatalogInfo catalog = 1;
+}
+
+// Lists all catalogs.
+message ListCatalogsRequest {
+  // The maximum number of results per page that should be returned.
+  // If the number of available results is larger than maxResults, the response
+  // will provide a next_page_token that can be used to get the next page of results
+  // in subsequent list requests. The server may return fewer than maxResults
+  // items even if there are more available. The client should check nextPageToken
+  // in the response to determine if there are more available.
+  // Must be non-negative. 0 will return no results but nextPageToken may be populated.
+  optional int32 max_results = 1 [(buf.validate.field).int32.gte = 0];
+
+  // Specifies a page token to use. Set pageToken to the nextPageToken returned
+  // by a previous list request to get the next page of results.
+  // next_page_token will not be returned in a response if there are no more results available.
+  optional string page_token = 2;
+}
+
+message ListCatalogsResponse {
+  // The list of catalogs.
+  repeated CatalogInfo catalogs = 1;
+
+  // A token to retrieve the next page of results. Pass this value in ListCatalogsRequest.page_token.
+  optional string next_page_token = 2;
+}
+
+// Updates the catalog that matches the supplied name.
+message UpdateCatalogRequest {
+  // The name of the catalog.
+  optional string new_name = 1 [(buf.validate.field).string.min_len = 1];
+
+  // User-provided free-form text description.
+  optional string comment = 2;
+
+  // A map of key-value properties attached to the securable.
+  // TODO(roeap): maps cannot be optional, how do we distinguish between an empty map and no map?
+  map<string, string> properties = 3;
+}
+
+message UpdateCatalogResponse {
+  // The updated catalog.
+  CatalogInfo catalog = 1;
+}
+
+service CatalogsService {
+  // Creates a new catalog instance.
+  rpc CreateCatalog(CreateCatalogRequest) returns (CreateCatalogResponse);
+
+  // Deletes the catalog that matches the supplied name.
+  rpc DeleteCatalog(DeleteCatalogRequest) returns (DeleteCatalogResponse);
+
+  // Gets the specified catalog.
+  rpc GetCatalog(GetCatalogRequest) returns (GetCatalogResponse);
+
+  // Lists all catalogs.
+  rpc ListCatalogs(ListCatalogsRequest) returns (ListCatalogsResponse);
+
+  // Updates the catalog that matches the supplied name.
+  rpc UpdateCatalog(UpdateCatalogRequest) returns (UpdateCatalogResponse);
+}

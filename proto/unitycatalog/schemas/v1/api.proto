@@ -1,0 +1,109 @@
+syntax = "proto3";
+
+package unitycatalog.schemas.v1;
+
+import "buf/validate/validate.proto";
+import "unitycatalog/schemas/v1/models.proto";
+
+// Creates a new schema in the specified catalog.
+message CreateSchemaRequest {
+  // The name of the catalog.
+  string name = 1 [(buf.validate.field).string.min_len = 1];
+
+  string catalog_name = 2 [(buf.validate.field).string.min_len = 1];
+
+  // User-provided free-form text description.
+  optional string comment = 3;
+
+  // A map of key-value properties attached to the securable.
+  map<string, string> properties = 4;
+}
+
+// Response message for the CreateSchema method.
+message CreateSchemaResponse {
+  // The created schema.
+  SchemaInfo schema = 1;
+}
+
+// Deletes the specified schema from the parent catalog.
+message DeleteSchemaRequest {
+  // full_name
+  string full_name = 1 [(buf.validate.field).string.min_len = 1];
+}
+
+// Response message for the DeleteSchema method.
+message DeleteSchemaResponse {}
+
+// Gets the specified schema for a catalog.
+message GetSchemaRequest {
+  // full_name
+  string full_name = 1 [(buf.validate.field).string.min_len = 1];
+}
+
+// Response message for the GetSchema method.
+message GetSchemaResponse {
+  // The schema.
+  SchemaInfo schema = 1;
+}
+
+// Gets an array of schemas for a catalog.
+// There is no guarantee of a specific ordering of the elements in the array.
+message ListSchemasRequest {
+  // The name of the catalog.
+  string catalog_name = 1 [(buf.validate.field).string.min_len = 1];
+
+  optional int32 max_results = 2 [(buf.validate.field).int32.gte = 0];
+
+  // Specifies a page token to use. Set pageToken to the nextPageToken returned
+  // by a previous list request to get the next page of results.
+  // next_page_token will not be returned in a response if there are no more results available.
+  optional string page_token = 3;
+}
+
+// Response message for the ListSchemas method.
+message ListSchemasResponse {
+  // The list of schemas.
+  repeated SchemaInfo schemas = 1;
+
+  // A token to retrieve the next page of results.
+  // To read the next page, pass this value as the page_token in the ListSchemasRequest
+  // call.
+  string next_page_token = 2;
+}
+
+// Updates the specified schema.
+message UpdateSchemaRequest {
+  // The name of the schema.
+  string full_name = 1 [(buf.validate.field).string.min_len = 1];
+
+  // User-provided free-form text description.
+  optional string comment = 3;
+
+  // A map of key-value properties attached to the securable.
+  map<string, string> properties = 4;
+
+  string new_name = 5 [(buf.validate.field).string.min_len = 1];
+}
+
+// Response message for the UpdateSchema method.
+message UpdateSchemaResponse {
+  // The updated schema.
+  SchemaInfo schema = 1;
+}
+
+service SchemaService {
+  // Creates a new schema in the specified catalog.
+  rpc CreateSchema(CreateSchemaRequest) returns (CreateSchemaResponse);
+
+  // Deletes the specified schema from the parent catalog.
+  rpc DeleteSchema(DeleteSchemaRequest) returns (DeleteSchemaResponse);
+
+  // Gets the specified schema for a catalog.
+  rpc GetSchema(GetSchemaRequest) returns (GetSchemaResponse);
+
+  // Gets an array of schemas for a catalog.
+  rpc ListSchemas(ListSchemasRequest) returns (ListSchemasResponse);
+
+  // Updates the specified schema.
+  rpc UpdateSchema(UpdateSchemaRequest) returns (UpdateSchemaResponse);
+}

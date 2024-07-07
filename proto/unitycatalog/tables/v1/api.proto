@@ -1,0 +1,108 @@
+syntax = "proto3";
+
+package unitycatalog.tables.v1;
+
+import "buf/validate/validate.proto";
+import "unitycatalog/tables/v1/models.proto";
+
+// TODO(roeap): should there be a update tablke method as well,
+// we can do schema evolution on delta lake tables after all.
+
+// Creates a new table instance.
+// WARNING: This API is experimental and will change in future versions.
+message CreateTableRequest {
+  // Name of the table, relative to its parent schema.
+  string name = 1 [(buf.validate.field).string.min_len = 1];
+
+  // Name of parent catalog.
+  string catalog_name = 2 [(buf.validate.field).string.min_len = 1];
+
+  // Name of parent schema relative to its parent catalog.
+  string schema_name = 3 [(buf.validate.field).string.min_len = 1];
+
+  // Table type.
+  TableType table_type = 4;
+
+  DataSourceFormat data_source_format = 5;
+
+  // The array of ColumnInfo definitions of the table's columns.
+  repeated ColumnInfo columns = 6;
+
+  // Storage root URL for table (for MANAGED, EXTERNAL tables)
+  string storage_location = 7;
+
+  // User-provided free-form text description.
+  optional string comment = 8;
+
+  // JSON-serialized key-value pair map, encoded (escaped) as a string.
+  map<string, string> properties = 9;
+}
+
+// Response message for CreateTable RPC.
+message CreateTableResponse {
+  // The created table.
+  TableInfo table = 1;
+}
+
+// Deletes a table from the specified parent catalog and schema.
+message DeleteTableRequest {
+  // Full name of the table
+  string full_name = 1 [(buf.validate.field).string.min_len = 1];
+}
+
+// Response message for DeleteTable RPC.
+message DeleteTableResponse {}
+
+// Gets a table for a specific catalog and schema.
+message GetTableRequest {
+  // Full name of the table
+  string full_name = 1 [(buf.validate.field).string.min_len = 1];
+}
+
+// Response message for GetTable RPC.
+message GetTableResponse {
+  // The table.
+  TableInfo table = 1;
+}
+
+// Gets the list of all available tables under the parent catalog and schema.
+// There is no guarantee of a specific ordering of the elements in the array.
+message ListTablesRequest {
+  // Name of parent catalog.
+  string catalog_name = 1 [(buf.validate.field).string.min_len = 1];
+
+  // Name of parent schema relative to its parent catalog.
+  string schema_name = 2 [(buf.validate.field).string.min_len = 1];
+
+  optional int32 max_results = 3 [(buf.validate.field).int32.gte = 0];
+
+  // Specifies a page token to use. Set pageToken to the nextPageToken returned
+  // by a previous list request to get the next page of results.
+  // next_page_token will not be returned in a response if there are no more results available.
+  optional string page_token = 4;
+}
+
+// Response message for ListTables RPC.
+message ListTablesResponse {
+  // The list of tables.
+  repeated TableInfo tables = 1;
+
+  // A token to retrieve the next page of results. Pass this value in the
+  // page_token field in the subsequent call to `ListTables` method to retrieve
+  // the next page of results.
+  string next_page_token = 2;
+}
+
+service Tables {
+  // Creates a new table instance.
+  rpc CreateTable(CreateTableRequest) returns (CreateTableResponse);
+
+  // Deletes a table from the specified parent catalog and schema.
+  rpc DeleteTable(DeleteTableRequest) returns (DeleteTableResponse);
+
+  // Gets a table for a specific catalog and schema.
+  rpc GetTable(GetTableRequest) returns (GetTableResponse);
+
+  // Gets the list of all available tables under the parent catalog and schema.
+  rpc ListTables(ListTablesRequest) returns (ListTablesResponse);
+}

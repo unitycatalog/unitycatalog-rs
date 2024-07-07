@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package unitycatalog.catalogs.v1;
+
+import "buf/validate/validate.proto";
+
+// Creates a new catalog instance.
+message CatalogInfo {
+  // unique identifier for the catalog.
+  string id = 1 [(buf.validate.field).string.min_len = 1];
+
+  // The name of the catalog.
+  string name = 2 [(buf.validate.field).string.min_len = 1];
+
+  // User-provided free-form text description.
+  optional string comment = 3;
+
+  // A map of key-value properties attached to the securable.
+  map<string, string> properties = 4;
+
+  // Time at which this catalog was created, in epoch milliseconds.
+  int64 created_at = 5;
+
+  // Time at which this catalog was last updated, in epoch milliseconds.
+  int64 updated_at = 6;
+}
